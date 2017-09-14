@@ -1,0 +1,16 @@
+{
+  "name": "silvioiannone/zoo-mate",
+  "description": "Helpers to work with ZOO items from YOOtheme.",
+  "authors": [
+    {
+      "name": "Silvio Iannone"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "SI\\Joomla\\ZOO": "src"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {}
+}
