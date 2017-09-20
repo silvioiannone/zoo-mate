@@ -2,8 +2,8 @@
 
 namespace SI\Joomla\ZOO;
 
-use Bloom\ZOO\Exceptions\ItemNotFound;
-use Bloom\ZOO\Exceptions\MissingItemProperty;
+use SI\Joomla\ZOO\Exceptions\ItemNotFound;
+use Si\Joomla\ZOO\Exceptions\MissingItemProperty;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionInterface;
 
@@ -145,6 +145,41 @@ class Item
         ]);
 
         return $this;
+    }
+
+    /**
+     * Detach a category.
+     *
+     * @param Category $category
+     * @return Item
+     */
+    public function detachCategory(Category $category): self
+    {
+        $this->db->table('zoo_category_item')
+            ->where('category_id', $category->id)
+            ->where('item_id', $this->id)
+            ->delete();
+
+        return $this;
+    }
+
+    /**
+     * Get the attached categories.
+     *
+     * @return array
+     */
+    public function categories(): array
+    {
+        $categoryIds = $this->db->table('zoo_category_item')
+            ->where('item_id', $this->id)
+            ->get()
+            ->pluck('category_id')
+            ->toArray();
+
+        return array_map(function($categoryId)
+        {
+            return (new Category($this->db))->find($categoryId);
+        }, $categoryIds);
     }
 
     /**
