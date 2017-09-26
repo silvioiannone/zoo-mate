@@ -185,10 +185,11 @@ class Item
     /**
      * Load an item from the database using its id.
      *
-     * @param $itemId
+     * @param integer $itemId
      * @return Item
+     * @throws \SI\Joomla\ZOO\Exceptions\ItemNotFound
      */
-    public function find($itemId): self
+    public function find(int $itemId): self
     {
         $this->id = $itemId;
 
@@ -202,7 +203,7 @@ class Item
      *
      * @return Item
      */
-    public function delete()
+    public function delete(): self
     {
         $this->db->table('zoo_item')
             ->where('id', $this->id)
@@ -283,6 +284,8 @@ class Item
 
     /**
      * Load the Item from the DB.
+     *
+     * @throws \SI\Joomla\ZOO\Exceptions\ItemNotFound
      */
     protected function load()
     {
@@ -335,15 +338,28 @@ class Item
             'name' => $this->name,
             'params' => json_encode($this->params ?? [], JSON_PRETTY_PRINT),
             'priority' => $this->priority ?? 0,
-            'publish_down' => $this->publishDown ?
-                $this->publishDown->toDateTimeString() : '2154-04-11',
-            'publish_up' => $this->publishUp ?
-                $this->publishUp->toDateTimeString() : Carbon::now()->toDateTimeString(),
+            'publish_down' => $this->publishDown->year < 1 ?
+                '2154-04-11' : $this->publishUp->toDateTimeString(),
+            'publish_up' => $this->publishUp->year < 1 ?
+                '2154-04-11' : $this->publishUp->toDateTimeString(),
             'searchable' => $this->searchable ?? 1,
             'state' => $this->state ?? 0,
             'type' => $this->type ?? 0
         ];
 
         return $rawItem;
+    }
+
+    /**
+     * Transform the item to an array.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $array = array_merge(['id' => $this->id], $this->toRawItem());
+        $array['elements'] = json_decode($array['elements']);
+
+        return $array;
     }
 }
