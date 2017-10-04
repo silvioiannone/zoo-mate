@@ -339,7 +339,7 @@ class Item
             'params' => json_encode($this->params ?? [], JSON_PRETTY_PRINT),
             'priority' => $this->priority ?? 0,
             'publish_down' => $this->publishDown->year < 1 ?
-                '2030-04-11' : $this->publishUp->toDateTimeString(),
+                '2030-04-11' : $this->publishDown->toDateTimeString(),
             'publish_up' => $this->publishUp->year < 1 ?
                 Carbon::now()->toDateTimeString() : $this->publishUp->toDateTimeString(),
             'searchable' => $this->searchable ?? 1,
