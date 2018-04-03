@@ -183,6 +183,27 @@ class Item
     }
 
     /**
+     * Get the attached tags.
+     *
+     * @return Tag[]
+     */
+    public function tags(): array
+    {
+        $rawTags = $this->db->table('zoo_tag')
+            ->where('item_id', $this->id)
+            ->get()
+            ->toArray();
+
+        return array_map(function(\stdClass $rawTag)
+        {
+            return (new Tag($this->db))->set([
+                'itemId' => $rawTag->item_id,
+                'name' => $rawTag->name
+            ]);
+        }, $rawTags);
+    }
+
+    /**
      * Load an item from the database using its id.
      *
      * @param integer $itemId
