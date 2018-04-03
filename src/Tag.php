@@ -95,6 +95,19 @@ class Tag
     }
 
     /**
+     * Delete the tag.
+     *
+     * @return void
+     */
+    public function delete(): void
+    {
+        $this->db->table('zoo_tag')
+            ->where('item_id', $this->itemId)
+            ->where('name', $this->name)
+            ->delete();
+    }
+
+    /**
      * Load the tag from the DB.
      *
      * @return Tag
