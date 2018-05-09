@@ -253,6 +253,18 @@ class Item
     }
 
     /**
+     * Remove all the relations.
+     */
+    public function unlinkAll(): self
+    {
+        $this->db->table('zoo_relateditemsproxref')
+            ->where('item_id', $this->id)
+            ->delete();
+
+        return $this;
+    }
+
+    /**
      * Save the item in the database.
      *
      * @return Item
